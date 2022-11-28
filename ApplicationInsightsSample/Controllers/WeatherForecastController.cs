@@ -43,5 +43,24 @@ namespace ApplicationInsightsSample.Controllers
             })
             .ToArray();
         }
+
+        [HttpPost(Name = "PostWeatherForecast")]
+        public IEnumerable<WeatherForecast> Post
+                                            (
+                                                [FromBody]
+                                                string q = "*"
+                                            )
+        {
+            var log = $"{nameof(WeatherForecastController)}.{HttpContext.GetRouteData().Values["action"]!.ToString()} @ {DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fffff")}";
+            _logger.LogInformation(log);
+            _telemetryClient.TrackTrace(log, SeverityLevel.Information);
+            return Enumerable.Range(1, 5).Select(index => new WeatherForecast
+            {
+                Date = DateTime.Now.AddDays(index),
+                TemperatureC = Random.Shared.Next(-20, 55),
+                Summary = Summaries[Random.Shared.Next(Summaries.Length)]
+            })
+            .ToArray();
+        }
     }
 }
