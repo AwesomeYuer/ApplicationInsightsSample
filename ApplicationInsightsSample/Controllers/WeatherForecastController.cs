@@ -32,7 +32,7 @@ namespace ApplicationInsightsSample.Controllers
         [HttpGet(Name = "GetWeatherForecast")]
         public IEnumerable<WeatherForecast> Get()
         {
-            var log = $"{nameof(WeatherForecastController)}.{HttpContext.GetRouteData().Values["action"]!.ToString()} @ {DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fffff")}";
+            var log = $"{nameof(WeatherForecastController)}.{HttpContext.GetRouteData().Values["action"]!.ToString()} @ TimeStamp:{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fffff")}";
             _logger.LogInformation(log);
             _telemetryClient.TrackTrace(log, SeverityLevel.Information);
             return Enumerable.Range(1, 5).Select(index => new WeatherForecast
@@ -51,7 +51,7 @@ namespace ApplicationInsightsSample.Controllers
                                                 string q = "*"
                                             )
         {
-            var log = $"{nameof(WeatherForecastController)}.{HttpContext.GetRouteData().Values["action"]!.ToString()} @ {DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fffff")}";
+            var log = $"{nameof(WeatherForecastController)}.{HttpContext.GetRouteData().Values["action"]!.ToString()} @ TimeStamp:{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fffff")}";
             _logger.LogInformation(log);
             _telemetryClient.TrackTrace(log, SeverityLevel.Information);
             return Enumerable.Range(1, 5).Select(index => new WeatherForecast
