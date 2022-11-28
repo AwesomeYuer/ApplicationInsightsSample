@@ -59,7 +59,7 @@ public class RequestResponseGuardMiddleware
                         {
                             requestBodyStream.Position = 0;
                             //should not use using
-                            var streamReader = new StreamReader(requestBodyStream);
+                            using var streamReader = new StreamReader(requestBodyStream);
                             requestBodyContent = streamReader.ReadToEndAsync().Result;
                             requestBodyStream.Position = 0;
                         }
