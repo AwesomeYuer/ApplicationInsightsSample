@@ -78,6 +78,7 @@ public class RequestResponseGuardMiddleware
                             responseBodyStream.Position = 0;
                             using var streamReader = new StreamReader(responseBodyStream);
                             responseBodyContent = streamReader.ReadToEnd();
+                            responseBodyStream.Position = 0;
                         }
                         #endregion
                         var log = $"{nameof(RequestResponseGuardMiddleware)}.Response.{nameof(context.Response.OnStarting)}\r\n"
