@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <ApplicationInsightsResourceId>/subscriptions/06111d9b-367e-4369-87e5-11c1852ae6eb/resourceGroups/Microshaoft-Misc-001-rg/providers/microsoft.insights/components/ApplicationInsightsSample</ApplicationInsightsResourceId>
+    <UserSecretsId>4edad5b4-b383-4ab7-b795-1efc2a51a8c1</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.21.0" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
+  </ItemGroup>
+
+</Project>
