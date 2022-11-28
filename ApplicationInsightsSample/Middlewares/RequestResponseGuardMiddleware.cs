@@ -47,7 +47,7 @@ public class RequestResponseGuardMiddleware
                     {
                         var requestBodyContent = string.Empty;
                         //should not use using 
-                        var requestBodyStream = request.Body;
+                        using var requestBodyStream = request.Body;
                         if
                             (
                                 requestBodyStream
@@ -64,8 +64,8 @@ public class RequestResponseGuardMiddleware
                             requestBodyStream.Position = 0;
                         }
                         #region Response
-                        using var responseBodyStream = response.Body;
                         var responseBodyContent = string.Empty;
+                        using var responseBodyStream = response.Body;
                         if
                             (
                                 responseBodyStream
