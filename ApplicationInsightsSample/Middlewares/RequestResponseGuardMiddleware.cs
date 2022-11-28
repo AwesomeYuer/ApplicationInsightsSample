@@ -23,6 +23,10 @@ public class RequestResponseGuardMiddleware
         var request = context.Request;
         request.EnableBuffering();
         var response = context.Response;
+
+        var controllerName = context.GetRouteData().Values["controller"]!.ToString();
+        var actionName = context.GetRouteData().Values["action"]!.ToString();
+
         var log = $"{nameof(RequestResponseGuardMiddleware)}.Request.OnExecuting @ {DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fffff")}";
         logger.LogInformation(log);
         telemetryClient.TrackTrace(log, SeverityLevel.Information);
@@ -82,6 +86,8 @@ public class RequestResponseGuardMiddleware
                         }
                         #endregion
                         var log = $"{nameof(RequestResponseGuardMiddleware)}.Response.{nameof(context.Response.OnStarting)}\r\n"
+                                + $"ControllerName:{controllerName}\r\n"
+                                + $"ActionName:{actionName}\r\n"
                                 + $"RequestBodyContent:\r\n{requestBodyContent}\r\n"
                                 + $"ResponseBodyContent:\r\n{responseBodyContent}\r\n"
                                 + $"@ TimeStamp:{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fffff")}";
