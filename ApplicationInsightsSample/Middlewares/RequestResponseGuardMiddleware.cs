@@ -2,6 +2,7 @@
 using Microsoft.ApplicationInsights;
 using Microsoft.ApplicationInsights.DataContracts;
 using Microsoft.AspNetCore.Http;
+using System.Web;
 
 public class RequestResponseGuardMiddleware
 {
@@ -26,6 +27,15 @@ public class RequestResponseGuardMiddleware
 
         var controllerName = context.GetRouteData().Values["controller"]!.ToString();
         var actionName = context.GetRouteData().Values["action"]!.ToString();
+        var requestPath = request.Path.ToString();
+        var requestQueryString = request.QueryString.ToString();
+        var requestRelativeUrl = $"{requestPath}";
+        if (!string.IsNullOrEmpty(requestQueryString))
+        {
+            requestQueryString = HttpUtility.UrlDecode(requestQueryString);
+            requestRelativeUrl += requestQueryString;
+        }
+
 
         var log = $"{nameof(RequestResponseGuardMiddleware)}.Request.OnExecuting @ {DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fffff")}";
         logger.LogInformation(log);
@@ -86,6 +96,7 @@ public class RequestResponseGuardMiddleware
                         }
                         #endregion
                         var log = $"{nameof(RequestResponseGuardMiddleware)}.Response.{nameof(context.Response.OnStarting)}\r\n"
+                                + $"RequestRelativeUrl:{requestRelativeUrl}\r\n"
                                 + $"ControllerName:{controllerName}\r\n"
                                 + $"ActionName:{actionName}\r\n"
                                 + $"RequestBodyContent:\r\n{requestBodyContent}\r\n"

@@ -30,7 +30,11 @@ namespace ApplicationInsightsSample.Controllers
         }
 
         [HttpGet(Name = "GetWeatherForecast")]
-        public IEnumerable<WeatherForecast> Get()
+        public IEnumerable<WeatherForecast> Get
+                                            (
+                                                [FromQuery]
+                                                string q = "*"
+                                            )
         {
             var log = $"{nameof(WeatherForecastController)}.{HttpContext.GetRouteData().Values["action"]!.ToString()} @ TimeStamp:{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fffff")}";
             _logger.LogInformation(log);
