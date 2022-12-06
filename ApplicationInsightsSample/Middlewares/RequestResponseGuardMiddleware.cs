@@ -15,18 +15,17 @@ public class RequestResponseGuardMiddleware
     }
     public async Task Invoke
                         (
-                            HttpContext context
+                            HttpContext httpContext
                             , ILogger<RequestResponseGuardMiddleware> logger
                             , TelemetryClient telemetryClient
-
                         )
     {
-        var request = context.Request;
+        var request = httpContext.Request;
         request.EnableBuffering();
-        var response = context.Response;
+        var response = httpContext.Response;
 
-        var controllerName = context.GetRouteData().Values["controller"]!.ToString();
-        var actionName = context.GetRouteData().Values["action"]!.ToString();
+        var controllerName = httpContext.GetRouteData().Values["controller"]!.ToString();
+        var actionName = httpContext.GetRouteData().Values["action"]!.ToString();
         var requestPath = request.Path.ToString();
         var requestQueryString = request.QueryString.ToString();
         var requestRelativeUrl = $"{requestPath}";
@@ -36,24 +35,23 @@ public class RequestResponseGuardMiddleware
             requestRelativeUrl += requestQueryString;
         }
 
-
         var log = $"{nameof(RequestResponseGuardMiddleware)}.Request.OnExecuting @ {DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fffff")}";
         logger.LogInformation(log);
         telemetryClient.TrackTrace(log, SeverityLevel.Information);
-        context
+        httpContext
             .Response
             .OnCompleted 
                 (
                     () =>
                     {
                         var responseContentLength = response.ContentLength;
-                        var log = $"{nameof(RequestResponseGuardMiddleware)}.Response.{nameof(context.Response.OnCompleted)}\r\nResponseContentLength:{responseContentLength} @ {DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fffff")}";
+                        var log = $"{nameof(RequestResponseGuardMiddleware)}.Response.{nameof(httpContext.Response.OnCompleted)}\r\nResponseContentLength:{responseContentLength} @ {DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fffff")}";
                         logger.LogInformation(log);
                         telemetryClient.TrackTrace(log, SeverityLevel.Information);
                         return Task.CompletedTask;
                     }
                 );
-        context
+        httpContext
             .Response
             .OnStarting
                 (
@@ -95,7 +93,7 @@ public class RequestResponseGuardMiddleware
                             responseBodyStream.Position = 0;
                         }
                         #endregion
-                        var log = $"{nameof(RequestResponseGuardMiddleware)}.Response.{nameof(context.Response.OnStarting)}\r\n"
+                        var log = $"{nameof(RequestResponseGuardMiddleware)}.Response.{nameof(httpContext.Response.OnStarting)}\r\n"
                                 + $"RequestRelativeUrl:{requestRelativeUrl}\r\n"
                                 + $"ControllerName:{controllerName}\r\n"
                                 + $"ActionName:{actionName}\r\n"
@@ -115,7 +113,7 @@ public class RequestResponseGuardMiddleware
             response
                     .Body = workingStream;
             await
-                _next(context);
+                _next(httpContext);
             workingStream
                     .Position = 0;
             await
@@ -140,4 +138,3 @@ public static class RequestResponseGuardMiddlewareExtensions
         return builder.UseMiddleware<RequestResponseGuardMiddleware>();
     }
 }
-
