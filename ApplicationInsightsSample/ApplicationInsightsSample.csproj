@@ -6,7 +6,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <ApplicationInsightsResourceId>/subscriptions/06111d9b-367e-4369-87e5-11c1852ae6eb/resourceGroups/Microshaoft-Misc-001-rg/providers/microsoft.insights/components/ApplicationInsightsSample</ApplicationInsightsResourceId>
     <UserSecretsId>4edad5b4-b383-4ab7-b795-1efc2a51a8c1</UserSecretsId>
-	  <LangVersion>11</LangVersion>
+	<LangVersion>11</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>
