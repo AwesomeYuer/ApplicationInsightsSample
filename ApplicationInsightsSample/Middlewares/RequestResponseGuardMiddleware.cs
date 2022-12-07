@@ -35,7 +35,7 @@ public class RequestResponseGuardMiddleware
             requestRelativeUrl += requestQueryString;
         }
 
-        var log = $"{nameof(RequestResponseGuardMiddleware)}.Request.OnExecuting @ {DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fffff")}";
+        var log = $"{nameof(RequestResponseGuardMiddleware)}.Request.OnExecuting @ {DateTime.Now:yyyy-MM-dd HH:mm:ss.fffff}";
         logger.LogInformation(log);
         telemetryClient.TrackTrace(log, SeverityLevel.Information);
         httpContext
