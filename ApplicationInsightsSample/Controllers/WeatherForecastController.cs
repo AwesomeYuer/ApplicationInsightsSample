@@ -55,7 +55,7 @@ namespace ApplicationInsightsSample.Controllers
                                                 string q = "*"
                                             )
         {
-            var log = $"{nameof(WeatherForecastController)}.{HttpContext.GetRouteData().Values["action"]} @ TimeStamp:{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fffff")}";
+            var log = $"{nameof(WeatherForecastController)}.{HttpContext.GetRouteData().Values["action"]} @ TimeStamp: {DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fffff")}";
             _logger.LogInformation(log);
             _telemetryClient.TrackTrace(log, SeverityLevel.Information);
             return Enumerable.Range(1, 5).Select(index => new WeatherForecast

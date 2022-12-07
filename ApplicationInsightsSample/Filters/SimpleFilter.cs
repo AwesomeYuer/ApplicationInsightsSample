@@ -19,17 +19,16 @@
             _telemetryClient = telemetryClient;
         }
 
-
         public void OnActionExecuting(ActionExecutingContext context)
         {
-            var log = $"{nameof(SimpleFilter)}.{nameof(OnActionExecuting)} @ TimeStamp:{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fffff")}";
+            var log = $"""{nameof(SimpleFilter)}.{nameof(OnActionExecuting)} @ TimeStamp: {DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fffff")}""";
             _logger.LogInformation(log);
             _telemetryClient.TrackTrace(log, SeverityLevel.Information);
         }
 
         public void OnActionExecuted(ActionExecutedContext context)
         {
-            var log = $"{nameof(SimpleFilter)}.{nameof(OnActionExecuted)} @ TimeStamp:{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fffff")}";
+            var log = $"""{nameof(SimpleFilter)}.{nameof(OnActionExecuted)} @ TimeStamp: {DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fffff")}""";
             _logger.LogInformation(log);
             _telemetryClient.TrackTrace(log, SeverityLevel.Information);
         }

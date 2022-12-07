@@ -93,13 +93,20 @@ public class RequestResponseGuardMiddleware
                             responseBodyStream.Position = 0;
                         }
                         #endregion
-                        var log = $"{nameof(RequestResponseGuardMiddleware)}.Response.{nameof(httpContext.Response.OnStarting)}\r\n"
-                                + $"RequestRelativeUrl:{requestRelativeUrl}\r\n"
-                                + $"ControllerName:{controllerName}\r\n"
-                                + $"ActionName:{actionName}\r\n"
-                                + $"RequestBodyContent:\r\n{requestBodyContent}\r\n"
-                                + $"ResponseBodyContent:\r\n{responseBodyContent}\r\n"
-                                + $"@ TimeStamp:{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fffff")}";
+                        var log = 
+$"""
+{nameof(RequestResponseGuardMiddleware)}.Response.{nameof(httpContext.Response.OnStarting)}
+
+RequestRelativeUrl: {requestRelativeUrl}
+ControllerName: {controllerName}
+ActionName: {actionName}
+RequestBodyContent:
+    {requestBodyContent}
+ResponseBodyContent:
+    {responseBodyContent}
+
+@ TimeStamp: {DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fffff")}
+""";
                         logger.LogInformation(log);
                         telemetryClient.TrackTrace(log, SeverityLevel.Information);
                         return Task.CompletedTask;
