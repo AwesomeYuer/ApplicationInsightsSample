@@ -105,7 +105,7 @@ RequestBodyContent:
 ResponseBodyContent:
     {responseBodyContent}
 
-@ TimeStamp: {DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fffff")}
+@ TimeStamp: {DateTime.Now:yyyy-MM-dd HH:mm:ss.fffff}
 """;
                         logger.LogInformation(log);
                         telemetryClient.TrackTrace(log, SeverityLevel.Information);
