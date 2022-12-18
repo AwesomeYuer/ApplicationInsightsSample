@@ -35,19 +35,36 @@ public class RequestResponseGuardMiddleware
             requestRelativeUrl += requestQueryString;
         }
 
-        var log = $"{nameof(RequestResponseGuardMiddleware)}.Request.OnExecuting @ {DateTime.Now:yyyy-MM-dd HH:mm:ss.fffff}";
-        logger.LogInformation(log);
-        telemetryClient.TrackTrace(log, SeverityLevel.Information);
+        logger
+            .LogOnDemand
+                    (
+                        LogLevel.Trace
+                        , () =>
+                        {
+                            var log = $"{nameof(RequestResponseGuardMiddleware)}.Request.OnExecuting @ {DateTime.Now:yyyy-MM-dd HH:mm:ss.fffff}";
+                            telemetryClient.TrackTrace(log, SeverityLevel.Information);
+                            return log;
+                        }
+                    );
+        
         httpContext
             .Response
             .OnCompleted 
                 (
                     () =>
                     {
-                        var responseContentLength = response.ContentLength;
-                        var log = $"{nameof(RequestResponseGuardMiddleware)}.Response.{nameof(httpContext.Response.OnCompleted)}\r\nResponseContentLength:{responseContentLength} @ {DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fffff")}";
-                        logger.LogInformation(log);
-                        telemetryClient.TrackTrace(log, SeverityLevel.Information);
+                        logger
+                            .LogOnDemand
+                                    (
+                                        LogLevel.Trace
+                                        , () =>
+                                        {
+                                            var responseContentLength = response.ContentLength;
+                                            var log = $"{nameof(RequestResponseGuardMiddleware)}.Response.{nameof(httpContext.Response.OnCompleted)}\r\nResponseContentLength:{responseContentLength} @ {DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fffff")}";
+                                            telemetryClient.TrackTrace(log, SeverityLevel.Information);
+                                            return log;
+                                        }
+                                    );
                         return Task.CompletedTask;
                     }
                 );
@@ -57,44 +74,50 @@ public class RequestResponseGuardMiddleware
                 (
                     () =>
                     {
-                        var requestBodyContent = string.Empty;
-                        //should not use using 
-                        using var requestBodyStream = request.Body;
-                        if
-                            (
-                                requestBodyStream
-                                                .CanRead
-                                &&
-                                requestBodyStream
-                                                .CanSeek
-                            )
-                        {
-                            requestBodyStream.Position = 0;
-                            //should not use using
-                            using var streamReader = new StreamReader(requestBodyStream);
-                            requestBodyContent = streamReader.ReadToEndAsync().Result;
-                            requestBodyStream.Position = 0;
-                        }
-                        #region Response
-                        var responseBodyContent = string.Empty;
-                        using var responseBodyStream = response.Body;
-                        if
-                            (
-                                responseBodyStream
-                                                .CanRead
-                                &&
-                                responseBodyStream
-                                                .CanSeek
-                            )
-                        {
-                            responseBodyStream.Position = 0;
-                            using var streamReader = new StreamReader(responseBodyStream);
-                            responseBodyContent = streamReader.ReadToEnd();
-                            responseBodyStream.Position = 0;
-                        }
-                        #endregion
-                        var log = 
-$"""
+                        logger
+                            .LogOnDemand
+                                    (
+                                        LogLevel.Trace
+                                        , () =>
+                                        {
+                                            var requestBodyContent = string.Empty;
+                                            //should not use using 
+                                            using var requestBodyStream = request.Body;
+                                            if
+                                                (
+                                                    requestBodyStream
+                                                                    .CanRead
+                                                    &&
+                                                    requestBodyStream
+                                                                    .CanSeek
+                                                )
+                                            {
+                                                requestBodyStream.Position = 0;
+                                                //should not use using
+                                                using var streamReader = new StreamReader(requestBodyStream);
+                                                requestBodyContent = streamReader.ReadToEndAsync().Result;
+                                                requestBodyStream.Position = 0;
+                                            }
+                                            #region Response
+                                            var responseBodyContent = string.Empty;
+                                            using var responseBodyStream = response.Body;
+                                            if
+                                                (
+                                                    responseBodyStream
+                                                                    .CanRead
+                                                    &&
+                                                    responseBodyStream
+                                                                    .CanSeek
+                                                )
+                                            {
+                                                responseBodyStream.Position = 0;
+                                                using var streamReader = new StreamReader(responseBodyStream);
+                                                responseBodyContent = streamReader.ReadToEnd();
+                                                responseBodyStream.Position = 0;
+                                            }
+                                            #endregion
+                                            var log =
+                    $"""
 {nameof(RequestResponseGuardMiddleware)}.Response.{nameof(httpContext.Response.OnStarting)}
 
 RequestRelativeUrl: {requestRelativeUrl}
@@ -107,8 +130,10 @@ ResponseBodyContent:
 
 @ TimeStamp: {DateTime.Now:yyyy-MM-dd HH:mm:ss.fffff}
 """;
-                        logger.LogInformation(log);
-                        telemetryClient.TrackTrace(log, SeverityLevel.Information);
+                                            telemetryClient.TrackTrace(log, SeverityLevel.Information);
+                                            return log;
+                                        }
+                                    );
                         return Task.CompletedTask;
                     }
                 );
