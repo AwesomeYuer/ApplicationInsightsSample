@@ -24,6 +24,12 @@ namespace Microshaoft
                     , Func<string> messageFactory
                 )
         {
+            var enums = Enum.GetValues(typeof(LogLevel));
+            foreach (LogLevel e in enums)
+            {
+                Console.WriteLine($"{e}: {@this.IsEnabled(e)}");
+            }
+
             var loggingFormatArguments = new object[] { };
             @this
                 .LogOnDemand

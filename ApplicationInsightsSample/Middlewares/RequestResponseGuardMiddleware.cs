@@ -21,24 +21,15 @@ public class RequestResponseGuardMiddleware
                         )
     {
         var request = httpContext.Request;
-        request.EnableBuffering();
         var response = httpContext.Response;
-
-        var controllerName = httpContext.GetRouteData().Values["controller"]!.ToString();
-        var actionName = httpContext.GetRouteData().Values["action"]!.ToString();
-        var requestPath = request.Path.ToString();
-        var requestQueryString = request.QueryString.ToString();
-        var requestRelativeUrl = $"{requestPath}";
-        if (!string.IsNullOrEmpty(requestQueryString))
-        {
-            requestQueryString = HttpUtility.UrlDecode(requestQueryString);
-            requestRelativeUrl += requestQueryString;
-        }
+        logger.LogWarning("LogWarning");
+        logger.LogError("LogError");
+        logger.LogCritical("LogCritical");
 
         logger
             .LogOnDemand
                     (
-                        LogLevel.Trace
+                        LogLevel.Information
                         , () =>
                         {
                             var log = $"{nameof(RequestResponseGuardMiddleware)}.Request.OnExecuting @ {DateTime.Now:yyyy-MM-dd HH:mm:ss.fffff}";
@@ -56,7 +47,7 @@ public class RequestResponseGuardMiddleware
                         logger
                             .LogOnDemand
                                     (
-                                        LogLevel.Trace
+                                        LogLevel.Information
                                         , () =>
                                         {
                                             var responseContentLength = response.ContentLength;
@@ -77,9 +68,20 @@ public class RequestResponseGuardMiddleware
                         logger
                             .LogOnDemand
                                     (
-                                        LogLevel.Trace
+                                        LogLevel.Information
                                         , () =>
                                         {
+                                            request.EnableBuffering();
+                                            var controllerName = httpContext.GetRouteData().Values["controller"]!.ToString();
+                                            var actionName = httpContext.GetRouteData().Values["action"]!.ToString();
+                                            var requestPath = request.Path.ToString();
+                                            var requestQueryString = request.QueryString.ToString();
+                                            var requestRelativeUrl = $"{requestPath}";
+                                            if (!string.IsNullOrEmpty(requestQueryString))
+                                            {
+                                                requestQueryString = HttpUtility.UrlDecode(requestQueryString);
+                                                requestRelativeUrl += requestQueryString;
+                                            }
                                             var requestBodyContent = string.Empty;
                                             //should not use using 
                                             using var requestBodyStream = request.Body;

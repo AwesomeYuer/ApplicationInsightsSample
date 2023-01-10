@@ -1,14 +1,21 @@
 using Microshaoft;
 using Microsoft.AspNetCore.HttpLogging;
-var builder = WebApplication.CreateBuilder(args);
+using Microsoft.Extensions.Logging;
+var builder = WebApplication
+                        .CreateBuilder(args)
+                       // .ConfigureLogging(logging => logging.SetMinimumLevel(LogLevel.Error))
+                ;
 builder
     .Logging
     .SetMinimumLevel
         (
-            LogLevel
-                    .Information
+            LogLevel.Critical
         );
-// Add services to the container.
+
+//builder.Host.ConfigureLogging(logging =>
+//{
+//    logging.SetMinimumLevel(LogLevel.Error);
+//});
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
